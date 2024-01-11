@@ -1,6 +1,16 @@
 import streamlit as st
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from PIL import Image
+from io import BytesIO
+import genai  # Assuming you have the genai library installed
+
+# Function to load the generative model
+@st.cache_resource
+def load_model() -> genai.GenerativeModel:
+    model = genai.GenerativeModel('gemini-pro')
+    return model
 
 # Function to scrape data from the given URL
 def scrape_eda_data():
@@ -12,7 +22,7 @@ def scrape_eda_data():
     # Your scraping logic here
     # For example, let's assume the data is in a div with class "publication"
     publications = soup.find_all('div', class_='publication')
-    
+
     return publications
 
 # Streamlit app
@@ -22,6 +32,9 @@ st.set_page_config(
 )
 
 st.title("EDA Healthcare Chat")
+
+# Load the generative model
+model = load_model()
 
 # Scrape data from the website
 scraped_data = scrape_eda_data()
@@ -42,9 +55,13 @@ if patient_question:
     # Use the scraped data or any other logic to generate a response
     # For now, let's just echo the question as a response
     st.text(f"You asked: {patient_question}")
-    st.text("I will provide a relevant response based on the scraped data.")
-    # Add your logic to generate a response based on the scraped data or any other source.
+
+    # Generate a response using the loaded generative model
+    response = model.generate_content(patient_question)
+    response.resolve()
+
+    # Display the generated response
+    st.text("AI Response:")
+    st.write(response.text)
 
 # Note: Add more features and logic to enhance the app as needed
-
-
