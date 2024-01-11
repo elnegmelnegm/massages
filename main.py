@@ -19,12 +19,6 @@ Powered by Google AI <img src="https://seeklogo.com/images/G/google-ai-logo-996E
 # Configure the generative AI API key
 genai.configure(api_key="AIzaSyCFPALEVIiwvWSREvVdBOzNd1VeyqQWt9o")  # Replace with your actual API key
 
-# Load the generative model
-@st.cache_resource
-def load_model() -> genai.GenerativeModel:
-    model = genai.GenerativeModel('gemini-pro')
-    return model
-
 # Function to scrape text from the specified URL using BeautifulSoup
 def scrape_text(url):
     response = requests.get(url)
@@ -39,7 +33,7 @@ def scrape_text(url):
 
 # Start the chat session
 if 'chat' not in st.session_state:
-    st.session_state.chat = load_model().start_chat(history=[])
+    st.session_state.chat = genai.GenerativeModel('gemini-pro').start_chat(history=[])
 
 # Chat session storage
 if 'chat_session' not in st.session_state:
@@ -72,7 +66,7 @@ if st.button("Ask"):
         st.session_state.chat_session.append({'user': {'role': 'user', 'parts': [prompt]}})
 
         # Get the model's response
-        response = st.session_state.chat.send_message(prompt)
+        response = st.session_state.chat.send_message(text_content)
 
         # Append model's response to chat session
         st.session_state.chat_session.append({'user': {'role': 'model', 'parts': [response.text]}})
