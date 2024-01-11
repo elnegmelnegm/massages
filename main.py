@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 # Configure the generative AI API key
-genai.configure(api_key="AIzaSyCFPALEVIiwvWSREvVdBOzNd1VeyqQWt9o")  # Replace with your actual API key
+genai.configure(api_key="YOUR_API_KEY")  # Replace with your actual API key
 
 # Load the generative model
 @st.cache_resource
@@ -39,16 +39,26 @@ if 'chat' not in st.session_state:
 if 'chat_session' not in st.session_state:
     st.session_state.chat_session = []
 
-# Main chat logic
-url = "https://edaegypt.gov.eg/ar/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%87%D9%8A%D8%A6%D8%A9/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D8%AF%D9%88%D8%B1%D9%8A%D8%A9/"
-text_content = scrape_text(url)
+# List of URLs to scrape data from
+urls = [
+    "https://edaegypt.gov.eg/ar/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%87%D9%8A%D8%A6%D8%A9/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D8%AF%D9%88%D8%B1%D9%8A%D8%A9/2023/",
+    "https://edaegypt.gov.eg/ar/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%87%D9%8A%D8%A6%D8%A9/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D8%AF%D9%88%D8%B1%D9%8A%D8%A9/2021/",
+    "https://edaegypt.gov.eg/ar/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%87%D9%8A%D8%A6%D8%A9/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D8%AF%D9%88%D8%B1%D9%8A%D8%A9/2022/",
+    "https://edaegypt.gov.eg/ar/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%87%D9%8A%D8%A6%D8%A9/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA/%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%A7%D8%AA-%D8%AF%D9%88%D8%B1%D9%8A%D8%A9/2023/",
+    # Add other URLs here
+]
+
+# Scrape data from each URL and append to text_content
+text_content = ""
+for url in urls:
+    text_content += scrape_text(url)
 
 # Display scraped text
-st.write("Text content from the specified URL:")
+st.write("Text content from the specified URLs:")
 st.write(text_content)
 
-# Ask a question based on the scraped text
-prompt = st.text_area("Ask a question based on the text content:")
+# Ask a question based on the combined text
+prompt = st.text_area("Ask a question based on the combined text:")
 
 if st.button("Ask"):
     if prompt:
