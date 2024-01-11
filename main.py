@@ -1,14 +1,13 @@
 import streamlit as st
-import pandas as pd
+import genai
 import requests
 from bs4 import BeautifulSoup
-from PIL import Image
-from io import BytesIO
-import genai  # Assuming you have the genai library installed
 
 # Function to load the generative model
 @st.cache_resource
 def load_model() -> genai.GenerativeModel:
+    # Make sure to replace 'YOUR_API_KEY' with your actual API key
+    genai.configure(api_key="AIzaSyCFPALEVIiwvWSREvVdBOzNd1VeyqQWt9o")
     model = genai.GenerativeModel('gemini-pro')
     return model
 
